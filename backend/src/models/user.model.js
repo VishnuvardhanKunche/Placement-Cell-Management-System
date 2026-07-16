@@ -65,9 +65,27 @@ async function getUserProfileByIdAndRole(id, role) {
     return result.rows[0] || null;
 }
 
+async function updateUserEmail(userId, email, client = pool) {
+    const result = await client.query(
+        "UPDATE users SET email = $2, updated_at = CURRENT_TIMESTAMP WHERE id = $1 RETURNING id, email, role, is_active, updated_at",
+        [userId, email]
+    );
+    return result.rows[0];
+}
+
+async function deleteUser(userId, client = pool) {
+    const result = await client.query(
+        "DELETE FROM users WHERE id = $1 RETURNING id",
+        [userId]
+    );
+    return result.rowCount > 0;
+}
+
 module.exports = {
     getUserByEmail,
     createUser,
     getUserById,
     getUserProfileByIdAndRole,
+    updateUserEmail,
+    deleteUser,
 };
