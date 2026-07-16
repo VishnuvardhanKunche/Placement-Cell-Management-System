@@ -2,8 +2,10 @@ const express = require("express");
 
 const app = express();
 
-app.get("/",(req,res)=>{
-    res.send("Welcome to the Smart placement cell management system");
-});
+const departmentRoutes = require("./routes/department.routes");
+
+app.use(express.json());
+
+app.use("/api/departments", departmentRoutes);
 
 module.exports = app;
