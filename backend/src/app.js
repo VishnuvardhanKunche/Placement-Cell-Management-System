@@ -7,6 +7,7 @@ const authRoutes = require("./routes/auth.routes");
 const companyRoutes = require("./routes/company.routes");
 const coordinatorRoutes = require("./routes/coordinator.routes");
 const studentRoutes = require("./routes/student.routes");
+const driveRoutes = require("./routes/drive.routes");
 
 app.use(express.json());
 
@@ -15,5 +16,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/companies", companyRoutes);
 app.use("/api/coordinators", coordinatorRoutes);
 app.use("/api/students", studentRoutes);
+app.use("/api/drives", driveRoutes);
 
 module.exports = app;
