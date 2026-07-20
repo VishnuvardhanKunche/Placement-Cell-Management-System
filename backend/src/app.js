@@ -10,6 +10,7 @@ const studentRoutes = require("./routes/student.routes");
 const driveRoutes = require("./routes/drive.routes");
 const applicationRoutes = require("./routes/application.routes");
 const offerRoutes = require("./routes/offer.routes");
+const dashboardRoutes = require("./routes/dashboard.routes");
 
 app.use(express.json());
 
@@ -21,5 +22,6 @@ app.use("/api/students", studentRoutes);
 app.use("/api/drives", driveRoutes);
 app.use("/api/applications", applicationRoutes);
 app.use("/api/offers", offerRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 module.exports = app;
