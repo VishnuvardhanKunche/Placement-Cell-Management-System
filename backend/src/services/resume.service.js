@@ -46,6 +46,17 @@ async function uploadOrReplaceResume(studentId, file) {
     // 4. Generate public URL
     const publicUrl = `${BASE_URL}/${relativePath}`;
 
+    // Notify student
+    const notificationService = require("./notification.service");
+    notificationService.createNotification(
+        studentId,
+        "Resume Uploaded",
+        "Your resume has been successfully uploaded and updated.",
+        "resume",
+        "resume",
+        studentId
+    );
+
     return {
         resume_path: relativePath,
         resume_url: publicUrl,

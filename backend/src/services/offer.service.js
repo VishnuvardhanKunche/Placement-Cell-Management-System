@@ -38,7 +38,20 @@ async function createOffer(data, officerId) {
         officerId
     );
 
-    return await offerModel.getOfferById(offer.id);
+    const createdOffer = await offerModel.getOfferById(offer.id);
+
+    // Notify student
+    const notificationService = require("./notification.service");
+    notificationService.createNotification(
+        application.student_id,
+        "New Offer Received",
+        `You have received a job offer for ${createdOffer.drive_title} with salary ${createdOffer.salary_offered_lpa} LPA.`,
+        "offer",
+        "offer",
+        createdOffer.id
+    );
+
+    return createdOffer;
 }
 
 async function getAllOffers() {
@@ -118,7 +131,20 @@ async function acceptOffer(offerId, studentId) {
     }
 
     await offerModel.updateOfferStatus(offerId, "accepted");
-    return await offerModel.getOfferById(offerId);
+    const updatedOffer = await offerModel.getOfferById(offerId);
+
+    // Notify Placement Officers
+    const notificationService = require("./notification.service");
+    notificationService.notifyUsersByRole(
+        "placement_officer",
+        "Offer Accepted",
+        `${updatedOffer.student_name} accepted the job offer for ${updatedOffer.drive_title}.`,
+        "offer",
+        "offer",
+        updatedOffer.id
+    );
+
+    return updatedOffer;
 }
 
 async function rejectOffer(offerId, studentId) {

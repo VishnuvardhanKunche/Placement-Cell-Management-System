@@ -1,4 +1,5 @@
 
+DROP TABLE IF EXISTS notifications CASCADE;
 DROP TABLE IF EXISTS offers CASCADE;
 DROP TABLE IF EXISTS applications CASCADE;
 DROP TABLE IF EXISTS drive_eligible_departments CASCADE;
@@ -204,3 +205,21 @@ CREATE INDEX idx_applications_status ON applications(status);
 -- Indexes on offers
 CREATE INDEX idx_offers_application ON offers(application_id);
 CREATE INDEX idx_offers_status ON offers(status);
+
+-- Table: notifications
+CREATE TABLE notifications (
+    id SERIAL PRIMARY KEY,
+    recipient_user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    title VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    notification_type VARCHAR(50) NOT NULL DEFAULT 'info',
+    reference_type VARCHAR(50),
+    reference_id INT,
+    is_read BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Indexes on notifications
+CREATE INDEX idx_notifications_recipient ON notifications(recipient_user_id);
+CREATE INDEX idx_notifications_is_read ON notifications(is_read);

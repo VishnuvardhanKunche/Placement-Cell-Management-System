@@ -13,6 +13,7 @@ const applicationRoutes = require("./routes/application.routes");
 const offerRoutes = require("./routes/offer.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
 const resumeRoutes = require("./routes/resume.routes");
+const notificationRoutes = require("./routes/notification.routes");
 
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
@@ -27,5 +28,6 @@ app.use("/api/applications", applicationRoutes);
 app.use("/api/offers", offerRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/resume", resumeRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 module.exports = app;

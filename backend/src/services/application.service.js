@@ -85,6 +85,18 @@ async function applyForDrive(studentId, driveId) {
 
     // 10. Create application
     const application = await applicationModel.createApplication(studentId, driveId);
+
+    // Notify Placement Officers
+    const notificationService = require("./notification.service");
+    notificationService.notifyUsersByRole(
+        "placement_officer",
+        "New Application Submitted",
+        `${student.full_name} applied for placement drive: ${drive.title}`,
+        "application",
+        "application",
+        application.id
+    );
+
     return await applicationModel.getApplicationById(application.id);
 }
 

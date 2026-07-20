@@ -71,8 +71,19 @@ async function createDrive(data) {
 
         await client.query("COMMIT");
 
-        // Return combined result
-        return await driveModel.getDriveById(drive.id);
+        const resultDrive = await driveModel.getDriveById(drive.id);
+
+        if (status === "published") {
+            const notificationService = require("./notification.service");
+            notificationService.notifyEligibleStudentsForDrive(
+                resultDrive.id,
+                resultDrive.title,
+                resultDrive.company_name,
+                eligible_departments
+            );
+        }
+
+        return resultDrive;
     } catch (error) {
         await client.query("ROLLBACK");
         throw error;
@@ -161,8 +172,19 @@ async function updateDrive(id, data) {
 
         await client.query("COMMIT");
 
-        // Return combined result
-        return await driveModel.getDriveById(id);
+        const resultDrive = await driveModel.getDriveById(id);
+
+        if (status === "published") {
+            const notificationService = require("./notification.service");
+            notificationService.notifyEligibleStudentsForDrive(
+                resultDrive.id,
+                resultDrive.title,
+                resultDrive.company_name,
+                eligible_departments
+            );
+        }
+
+        return resultDrive;
     } catch (error) {
         await client.query("ROLLBACK");
         throw error;

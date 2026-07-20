@@ -219,7 +219,20 @@ async function verifyStudent(studentId, coordinatorId) {
         throw error;
     }
 
-    return await studentModel.verifyStudent(studentId, coordinatorId);
+    const verifiedStudent = await studentModel.verifyStudent(studentId, coordinatorId);
+
+    // Notify student
+    const notificationService = require("./notification.service");
+    notificationService.createNotification(
+        studentId,
+        "Profile Verified",
+        "Your profile has been verified by your department coordinator.",
+        "verification",
+        "student",
+        studentId
+    );
+
+    return verifiedStudent;
 }
 
 async function unverifyStudent(studentId, coordinatorId) {
