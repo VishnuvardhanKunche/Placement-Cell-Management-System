@@ -81,7 +81,7 @@ async function updateStudentProfile(
 ) {
     const result = await client.query(
         `UPDATE students
-         SET full_name = $2, phone = $3, cgpa = $4, backlogs = $5, graduation_year = $6, updated_at = CURRENT_TIMESTAMP
+         SET full_name = $2, phone = $3, cgpa = $4, backlogs = $5, graduation_year = $6
          WHERE user_id = $1
          RETURNING *`,
         [userId, fullName, phone, cgpa, backlogs, graduationYear]
@@ -99,7 +99,6 @@ async function verifyStudent(studentId, coordinatorId) {
     );
     return result.rows[0];
 }
-
 async function unverifyStudent(studentId) {
     const result = await pool.query(
         `UPDATE students
