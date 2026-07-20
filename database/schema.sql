@@ -1,4 +1,5 @@
 
+DROP TABLE IF EXISTS offers CASCADE;
 DROP TABLE IF EXISTS applications CASCADE;
 DROP TABLE IF EXISTS drive_eligible_departments CASCADE;
 DROP TABLE IF EXISTS placement_drives CASCADE;
@@ -9,6 +10,7 @@ DROP TABLE IF EXISTS placement_officers CASCADE;
 DROP TABLE IF EXISTS departments CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 
+DROP TYPE IF EXISTS offer_status CASCADE;
 DROP TYPE IF EXISTS application_status CASCADE;
 DROP TYPE IF EXISTS drive_status CASCADE;
 DROP TYPE IF EXISTS user_role CASCADE;
@@ -33,6 +35,13 @@ CREATE TYPE application_status AS ENUM (
     'applied', 
     'shortlisted', 
     'selected', 
+    'rejected',
+    'withdrawn'
+);
+
+CREATE TYPE offer_status AS ENUM (
+    'pending',
+    'accepted',
     'rejected'
 );
 
@@ -159,6 +168,19 @@ CREATE TABLE applications (
     CONSTRAINT uq_student_drive UNIQUE (student_id, drive_id)
 );
 
+-- Table: offers
+CREATE TABLE offers (
+    id SERIAL PRIMARY KEY,
+    application_id INT NOT NULL UNIQUE REFERENCES applications(id) ON DELETE CASCADE,
+    offer_letter_details TEXT,
+    salary_offered_lpa NUMERIC(5,2) NOT NULL DEFAULT 0.00,
+    joining_date DATE,
+    status offer_status NOT NULL DEFAULT 'pending',
+    created_by_officer_id INT REFERENCES placement_officers(user_id) ON DELETE SET NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Performance Indexes (Foreign Keys, Search, and Filtering Columns)
 
 -- Indexes on users
@@ -178,3 +200,7 @@ CREATE INDEX idx_placement_drives_deadline ON placement_drives(registration_dead
 CREATE INDEX idx_applications_student ON applications(student_id);
 CREATE INDEX idx_applications_drive ON applications(drive_id);
 CREATE INDEX idx_applications_status ON applications(status);
+
+-- Indexes on offers
+CREATE INDEX idx_offers_application ON offers(application_id);
+CREATE INDEX idx_offers_status ON offers(status);
